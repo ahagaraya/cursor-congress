@@ -1,0 +1,9 @@
+{
+  "role": "critic",
+  "tick": 2,
+  "content": "Консенсус: SQLite + PII-baseline, Postgres по триггерам. Закрываем.",
+  "route": { "next": [] },
+  "confidence": 0.9,
+  "propose_stop": true,
+  "stop_confidence": 0.89
+}

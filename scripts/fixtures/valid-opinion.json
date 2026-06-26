@@ -1,0 +1,9 @@
+{
+  "role": "critic",
+  "position": "approve",
+  "confidence": 0.85,
+  "key_points": ["Test point"],
+  "risks": [],
+  "evidence": ["fixture"],
+  "questions_for_others": []
+}

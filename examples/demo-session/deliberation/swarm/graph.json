@@ -1,0 +1,78 @@
+{
+  "nodes": [
+    {
+      "id": "critic"
+    },
+    {
+      "id": "architect"
+    },
+    {
+      "id": "pragmatist"
+    },
+    {
+      "id": "tech-lead"
+    },
+    {
+      "id": "developer"
+    },
+    {
+      "id": "lawyer"
+    },
+    {
+      "id": "security"
+    },
+    {
+      "id": "cybersec"
+    }
+  ],
+  "edges": [
+    {
+      "from": "critic",
+      "to": "cybersec",
+      "tick": 0,
+      "label": "PII baseline"
+    },
+    {
+      "from": "critic",
+      "to": "architect",
+      "tick": 0,
+      "label": "dual-target migrations"
+    },
+    {
+      "from": "architect",
+      "to": "lawyer",
+      "tick": 0,
+      "label": "152-ФЗ managed DB"
+    },
+    {
+      "from": "architect",
+      "to": "developer",
+      "tick": 0,
+      "label": "ORM week-1"
+    },
+    {
+      "from": "pragmatist",
+      "to": "tech-lead",
+      "tick": 0,
+      "label": "backup runbook"
+    },
+    {
+      "from": "tech-lead",
+      "to": "security",
+      "tick": 0,
+      "label": "ops risk"
+    },
+    {
+      "from": "developer",
+      "to": "cybersec",
+      "tick": 1,
+      "label": "PII checklist sign-off"
+    },
+    {
+      "from": "security",
+      "to": "critic",
+      "tick": 1,
+      "label": "закрыть консенсус"
+    }
+  ]
+}

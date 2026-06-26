@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressResearchRequest",
+  "type": "object",
+  "required": ["id", "requested_by", "query", "priority"],
+  "properties": {
+    "id": { "type": "string" },
+    "requested_by": { "type": "string" },
+    "query": { "type": "string" },
+    "context": { "type": "string" },
+    "priority": { "enum": ["blocking", "optional"] },
+    "status": { "enum": ["pending", "in_progress", "done", "failed"] }
+  }
+}

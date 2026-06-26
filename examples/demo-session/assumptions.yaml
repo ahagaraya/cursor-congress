@@ -1,0 +1,26 @@
+topic: "SQLite vs PostgreSQL для MVP соло-разработчика"
+created: "2026-06-26"
+
+commission_mode: full
+
+constraints:
+  deadline: null
+  budget: "минимальный — соло, один VPS"
+  team_size: 1
+  stack: []
+
+facts:
+  - "Тип: сайд-проект / инструмент для себя"
+  - "Нагрузка: только автор и тестеры"
+  - "Хостинг: один VPS/VM"
+  - "Горизонтальное масштабирование: не сейчас, возможно скоро"
+  - "Данные: персональные данные пользователей (ПДн)"
+  - "Боли SQLite: мелкие неудобства (миграции, типы)"
+
+unknowns: []
+
+out_of_scope:
+  - "Сравнение с MySQL, MongoDB"
+  - "Production-кластер PostgreSQL"
+
+optional_roles_skip: [economist, marketer, product-manager]

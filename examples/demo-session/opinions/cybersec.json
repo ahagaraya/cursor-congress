@@ -1,0 +1,36 @@
+{
+  "role": "cybersec",
+  "position": "revise",
+  "confidence": 0.84,
+  "summary": "Выбор SQLite vs PostgreSQL для соло-MVP с ПДн на одном VPS не определяет уровень безопасности — определяют шифрование, контроль доступа и восстановление. SQLite уменьшает attack surface (нет сетевого демона БД), но один файл с ПДн — высокоценная цель при компромиссе приложения или VPS; без LUKS/SQLCipher и off-site бэкапов это недопустимо. PostgreSQL добавляет поверхность (служба, pg_hba.conf, патчи), но даёт роли, RLS и привычный pg_dump — при bind только на 127.0.0.1 и минимальных GRANT риск управляем. Для «только я и тестеры» SQLite с PII-пакетом безопаснее по attack surface; при «возможно скоро» concurrent writers или multi-tenant — Postgres с первого релиза с ПДн, иначе миграция под живыми данными увеличит окно инцидента.",
+  "key_points": [
+    "Attack surface: SQLite — только файл + приложение; Postgres — ещё процесс, порт (даже localhost), конфиги и учётные записи. На одном VPS компромисс ОС или SSH убивает оба варианта; Postgres не «безопаснее по умолчанию», только при localhost-only, отдельном app-role без SUPERUSER и актуальных патчах.",
+    "PII (152-ФЗ / GDPR-логика): обязателен минимальный пакет независимо от БД — шифрование at-rest (LUKS тома VPS или SQLCipher для SQLite / encrypted volume для Postgres data dir), TLS на приложении, секреты вне репозитория, политика удаления субъекта, журнал доступа к админ-операциям, off-site бэкапы с ежеквартальным тестом restore.",
+    "Encryption: SQLite без SQLCipher или незашифрованного тома = ПДн в plaintext на диске; Postgres community без pgcrypto на чувствительных колонках — то же. Field-level encryption для email/phone/token — ответственность приложения в обоих случаях.",
+    "Access control: SQLite — только app-level; один скомпрометированный процесс читает весь файл. Postgres — GRANT на схему/таблицы, отдельный migration-role, RLS при multi-tenant; для соло с одним app-user выигрыш скромный, но RLS окупается при «возможно скоро».",
+    "VPS hardening обязателен до выбора БД: SSH по ключам, firewall (только 22/80/443), автообновления безопасности, non-root deploy, отдельный system user для app и БД, мониторинг диска и failed login.",
+    "Backup как контроль безопасности: SQLite — Litestream/rclone в encrypted bucket; Postgres — pg_dump + WAL archive off-site. Без проверенного restore бэкап не существует; это PII-инцидент, не «ops-мелочь».",
+    "Ответ Critic: PII-пакет минимум — (1) encrypted at-rest, (2) TLS in transit, (3) daily off-site backup + restore drill, (4) least-privilege DB/app credentials, (5) documented breach/delete procedure. Без п.1–3 любой выбор БД — reject для MVP с ПДн."
+  ],
+  "risks": [
+    "Файл SQLite (*.db) в бэкапе VPS или snapshot провайдера без шифрования — утечка всей базы одним архивом.",
+    "Postgres с listen_addresses='*' или слабым pg_hba.conf на VPS — сканирование 5432 из интернета; типичная misconfiguration соло.",
+    "«Postgres = enterprise security» без RLS, патчей и rotation паролей — ложное спокойствие; attack surface вырос, контроли не добавились.",
+    "Миграция SQLite→Postgres под накопленными ПДн без staging и encrypted dump — окно утечки при cutover и риск потери audit trail.",
+    "Хранение DATABASE_URL и JWT secret в .env на том же VPS без ограничения прав (644) — эквивалент plaintext PII при RCE в приложении."
+  ],
+  "evidence": [
+    "assumptions.yaml: «Данные: персональные данные пользователей (ПДн)», «Хостинг: один VPS/VM», team_size: 1",
+    "intake/answers.yaml: data_sensitivity «Персональные данные пользователей», hosting «Один VPS / VM»",
+    "opinions/critic.json: вопрос Security/Cybersec о минимальном PII-пакете",
+    "SQLite security: один writer, файл на диске — OWASP A02 (cryptographic failures) при отсутствии at-rest encryption",
+    "PostgreSQL: pg_hba.conf, role-based access, RLS — при bind 127.0.0.1 сеть не экспонируется наружу"
+  ],
+  "questions_for_others": [
+    "Lawyer: достаточно ли LUKS + политики удаления для MVP или нужен DPO/уведомление Роскомнадзора при заявленных ПДн?",
+    "Developer: ORM/миграции — parameterized queries и secrets через env/vault; готов ли стек к SQLCipher или только filesystem encryption?",
+    "Security: мониторинг — fail2ban/auditd достаточно для соло или нужен SIEM-alerts на pg_dump/Litestream failures?",
+    "Pragmatist: Litestream+SQLite vs Postgres+pg_dump на том же VPS — что реально внедрить за 1 день с тем же PII-пакетом?"
+  ],
+  "recommendation": "Зафиксировать PII-бaseline до выбора БД: encrypted volume, TLS, off-site backup с restore drill, least-privilege credentials. Если baseline готов за ≤2 дней соло — SQLite на MVP (меньший attack surface при localhost-only app). Триггеры немедленного Postgres: >1 concurrent writer, need RLS/multi-tenant, или еженедельные болезненные миграции с ПДн. Postgres поднимать только на 127.0.0.1, app-role без DDL, firewall без 5432 наружу. Не хранить ПДн без baseline ни в SQLite, ни в Postgres."
+}

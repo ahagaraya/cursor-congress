@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressJointProposal",
+  "type": "object",
+  "required": [
+    "verdict",
+    "headline",
+    "evolved_solution",
+    "development_path",
+    "commissioner_contributions",
+    "remaining_dissent",
+    "confidence"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["approve", "revise", "reject"]
+    },
+    "headline": { "type": "string" },
+    "evolved_solution": {
+      "type": "string",
+      "description": "The joint solution after swarm dialogue — may synthesize multiple Round 1 ideas"
+    },
+    "development_path": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase", "goal", "duration", "budget_hint"],
+        "properties": {
+          "phase": { "type": "string" },
+          "goal": { "type": "string" },
+          "duration": { "type": "string" },
+          "budget_hint": { "type": "string" }
+        }
+      }
+    },
+    "commissioner_contributions": {
+      "type": "object",
+      "properties": {
+        "critic": { "type": "string" },
+        "architect": { "type": "string" },
+        "pragmatist": { "type": "string" }
+      }
+    },
+    "compromises": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "remaining_dissent": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "additionalProperties": false
+}

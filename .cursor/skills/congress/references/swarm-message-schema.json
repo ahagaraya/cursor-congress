@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressSwarmMessage",
+  "type": "object",
+  "required": ["role", "tick", "content", "route", "confidence"],
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "critic",
+        "architect",
+        "pragmatist",
+        "tech-lead",
+        "developer",
+        "lawyer",
+        "security",
+        "cybersec",
+        "economist",
+        "marketer",
+        "product-manager"
+      ]
+    },
+    "tick": { "type": "integer", "minimum": 0 },
+    "message_id": { "type": "string" },
+    "in_reply_to": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main statement for dialogue.md and messages.jsonl"
+    },
+    "replies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["to", "stance", "response"],
+        "properties": {
+          "to": {
+            "type": "string",
+            "enum": [
+              "critic",
+              "architect",
+              "pragmatist",
+              "tech-lead",
+              "developer",
+              "lawyer",
+              "security",
+              "cybersec",
+        "economist",
+        "marketer",
+        "product-manager"
+            ]
+          },
+          "stance": { "enum": ["agree", "disagree", "partial"] },
+          "response": { "type": "string" }
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "required": ["next"],
+      "properties": {
+        "next": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["to", "reason"],
+            "properties": {
+              "to": {
+                "type": "string",
+                "enum": [
+                  "critic",
+                  "architect",
+                  "pragmatist",
+                  "tech-lead",
+                  "developer",
+                  "lawyer",
+                  "security",
+                  "cybersec",
+        "economist",
+        "marketer",
+        "product-manager"
+                ]
+              },
+              "reason": { "type": "string" },
+              "priority": { "enum": ["high", "normal", "low"], "default": "normal" }
+            }
+          }
+        }
+      }
+    },
+    "research_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "priority", "reason"],
+        "properties": {
+          "query": { "type": "string" },
+          "priority": { "enum": ["blocking", "optional"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "propose_stop": { "type": "boolean", "default": false },
+    "stop_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "revised_position": { "enum": ["approve", "revise", "reject"] },
+    "revised_recommendation": { "type": "string" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": false
+}

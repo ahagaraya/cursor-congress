@@ -1,0 +1,7 @@
+{
+  "role": "security",
+  "tick": 1,
+  "content": "Один VPS = SPOF. SQLite без порта 5432 — меньше misconfig. Обязательно: encrypted volume, off-site backup, quarterly restore. Иначе любая СУБД одинаково плоха.",
+  "route": { "next": [{ "to": "critic", "reason": "закрыть консенсус", "priority": "high" }] },
+  "confidence": 0.86
+}

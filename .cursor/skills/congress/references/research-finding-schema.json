@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressResearchFinding",
+  "type": "object",
+  "required": ["id", "query", "summary", "sources", "confidence"],
+  "properties": {
+    "id": { "type": "string" },
+    "query": { "type": "string" },
+    "requested_by": { "type": "string" },
+    "retrieved_at": { "type": "string" },
+    "summary": { "type": "string" },
+    "key_facts": { "type": "array", "items": { "type": "string" } },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "title"],
+        "properties": {
+          "url": { "type": "string" },
+          "title": { "type": "string" },
+          "date": { "type": "string" },
+          "relevance": { "type": "string" }
+        }
+      }
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "caveats": { "type": "array", "items": { "type": "string" } }
+  }
+}

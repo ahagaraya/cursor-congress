@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressSwarmRouterState",
+  "type": "object",
+  "required": ["mode", "tick", "status", "limits", "counters", "inbox"],
+  "properties": {
+    "mode": { "const": "swarm" },
+    "tick": { "type": "integer", "minimum": 0 },
+    "status": { "enum": ["idle", "running", "stopped", "completed"] },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "max_ticks": { "type": "integer", "default": 24 },
+        "max_messages_per_role": { "type": "integer", "default": 4 },
+        "max_total_messages": { "type": "integer", "default": 60 },
+        "max_parallel": { "type": "integer", "default": 4 },
+        "max_research_requests": { "type": "integer", "default": 20 },
+        "cooldown_same_route": { "type": "integer", "default": 2 },
+        "stop_quorum": { "type": "integer", "default": 3 },
+        "stop_confidence_min": { "type": "number", "default": 0.75 }
+      }
+    },
+    "counters": {
+      "type": "object",
+      "properties": {
+        "total_messages": { "type": "integer" },
+        "research_requests": { "type": "integer" },
+        "by_role": { "type": "object" }
+      }
+    },
+    "inbox": {
+      "type": "object",
+      "description": "role -> array of inbox items"
+    },
+    "flags": {
+      "type": "object",
+      "properties": {
+        "developer_spoke_swarm": { "type": "boolean" },
+        "cybersec_spoke_swarm": { "type": "boolean" }
+      }
+    },
+    "route_log": { "type": "array" },
+    "research_queue": { "type": "array" },
+    "stop_votes": { "type": "array" },
+    "stop_reason": { "type": "string" },
+    "updated": { "type": "string" }
+  }
+}

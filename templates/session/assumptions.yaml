@@ -1,0 +1,23 @@
+# Stated facts and constraints only. Mark unknowns explicitly.
+
+topic: ""
+created: ""
+
+# full | lite — обязательно; задаёт пользователь на triage (см. triage-protocol.md)
+commission_mode: null
+
+constraints:
+  deadline: null
+  budget: null
+  team_size: null
+  stack: []
+
+facts: []
+
+unknowns: []
+
+out_of_scope: []
+
+# Опциональные комиссары (economist, marketer, product-manager) — только при необходимости:
+# optional_roles: [economist]
+# optional_roles_skip: [marketer]   # отключить авто-детект из BRIEF

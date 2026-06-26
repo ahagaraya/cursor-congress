@@ -1,0 +1,29 @@
+name: Congress tests
+
+on:
+  push:
+    paths:
+      - '**'
+      - '.cursor/skills/**'
+      - '.github/workflows/congress-test.yml'
+  pull_request:
+    paths:
+      - '**'
+      - '.cursor/skills/**'
+      - '.github/workflows/congress-test.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+            steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: congress/package.json
+      - run: npm install
+      - run: npm test
+      - run: npm run validate:demo

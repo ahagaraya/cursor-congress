@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+# local sessions (never publish)
+sessions/*
+!sessions/.gitkeep
+
+# runtime markers
+.active-session.json
+ACTIVE.congress.md
+
+# OS
+.DS_Store

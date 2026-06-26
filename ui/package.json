@@ -1,0 +1,9 @@
+{
+  "name": "congress-ui",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "log": "node log-event.mjs"
+  }
+}

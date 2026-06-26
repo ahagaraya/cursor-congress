@@ -1,0 +1,30 @@
+{
+  "name": "congress",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Congress multi-agent deliberation — scripts and router",
+  "scripts": {
+    "test": "node --test swarm/router.test.mjs scripts/run.test.mjs scripts/lint-answer.test.mjs scripts/validate-schema.test.mjs scripts/cloud-path.test.mjs scripts/roles.test.mjs scripts/lint-prose.test.mjs scripts/triage.test.mjs scripts/active-indicator.test.mjs",
+    "triage": "node scripts/triage.mjs",
+    "test:router": "node --test swarm/router.test.mjs",
+    "test:run": "node --test scripts/run.test.mjs",
+    "test:lint": "node --test scripts/lint-answer.test.mjs",
+    "test:schema": "node --test scripts/validate-schema.test.mjs",
+    "lint:answer": "node scripts/lint-answer.mjs",
+    "lint:prose": "node scripts/lint-prose.mjs",
+    "validate": "node scripts/validate-session.mjs",
+    "validate:demo": "node scripts/validate-session.mjs examples/demo-session --gate full --skip-intake",
+    "export-demo": "node scripts/export-demo.mjs",
+    "validate:schema": "node scripts/validate-schema.mjs",
+    "new-session": "node scripts/new-session.mjs",
+    "run": "node scripts/run.mjs",
+    "clean-sessions": "node scripts/clean-sessions.mjs",
+    "install-hooks": "node scripts/install-hooks.mjs",
+    "install-cursor-indicator": "node scripts/install-cursor-indicator.mjs",
+    "ui": "node ui/server.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1"
+  }
+}

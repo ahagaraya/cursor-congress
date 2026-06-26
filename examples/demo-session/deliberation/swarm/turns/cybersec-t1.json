@@ -1,0 +1,9 @@
+{
+  "role": "cybersec",
+  "tick": 1,
+  "content": "PII-baseline: TLS, encryption at rest, least privilege, backup encryption, процедура удаления и инцидента. SQLite ок если baseline за 1–2 дня. Postgres при concurrent write или RLS.",
+  "route": { "next": [] },
+  "confidence": 0.88,
+  "propose_stop": true,
+  "stop_confidence": 0.86
+}

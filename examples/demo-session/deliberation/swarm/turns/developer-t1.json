@@ -1,0 +1,7 @@
+{
+  "role": "developer",
+  "tick": 1,
+  "content": "Неделя 1: Drizzle/Prisma, WAL, strict types, DATABASE_URL в env. Postgres в docker-compose для smoke-test миграций. Не трогать prod.",
+  "route": { "next": [{ "to": "cybersec", "reason": "PII checklist sign-off", "priority": "high" }] },
+  "confidence": 0.9
+}

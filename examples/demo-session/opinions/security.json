@@ -1,0 +1,41 @@
+{
+  "role": "security",
+  "position": "revise",
+  "confidence": 0.84,
+  "summary": "Для соло на одном VPS с ПДн выбор БД вторичен: главный операционный риск — единая точка отказа (сервер + человек) и дисциплина бэкапов. SQLite безопаснее по операционке (нет лишнего демона и порта), но файл БД = весь инвентарь утечки при компрометации VPS. Переход на PostgreSQL на том же VPS не снимает риски ПДн, а добавляет misconfiguration и патчи. Рекомендация: остаться на SQLite до триггеров масштаба; до запуска — зашифрованные offsite-бэкапы и проверенное восстановление.",
+  "key_points": [
+    "Один VPS = один SPOF: пожар провайдера, ransomware, потеря SSH-ключа — SQLite и Postgres падают одинаково",
+    "SQLite снижает операционную поверхность: нет postgres-сервиса, pg_hba, открытого 5432 — меньше шансов «забыл закрыть порт»",
+    "Файл .db на диске: права 600, отдельный unix-user для приложения; snapshot VPS провайдера часто хранит ПДн без вашего контроля",
+    "ПДн требуют процесса, не движка: шифрованный offsite-бэкап, ежемесячный test-restore, политика удаления — до выбора Postgres",
+    "Postgres на том же VPS оправдан, когда нужны отдельные DB-роли, audit log, или managed-инстанс в другой зоне — не «ради безопасности MVP»",
+    "Триггеры смены: второй инстанс приложения, concurrent write >1 писателя, требование compliance к журналированию доступа к строкам"
+  ],
+  "risks": [
+    "Solo key-person: болезнь/отпуск — некому восстановить из бэкапа; runbook не задокументирован",
+    "Копирование sqlite-файла без checkpoint/WAL — бэкап битый, восстановление в кризис проваливается",
+    "Postgres с listen_addresses='*' и слабым паролем на solo VPS — типичная самострельная дыра",
+    "Бэкапы в тот же VPS или iCloud рядом с кодом — двойная утечка при взломе аккаунта",
+    "Провайдер VPS в юрисдикции без вашего контроля — ПДн «лежат» там же, где snapshot"
+  ],
+  "evidence": [
+    "intake/answers.yaml: один VPS, ПДн, соло, низкая нагрузка",
+    "assumptions.yaml: budget минимальный, team_size 1",
+    "SQLite backup docs: hot backup via sqlite3 .backup / WAL checkpoint",
+    "PostgreSQL ops: pg_hba.conf, listen_addresses hardening guides"
+  ],
+  "questions_for_others": [
+    "Lawyer: достаточно ли хранения ПДн на VPS в выбранной юрисдикции провайдера?",
+    "Cybersec: шифрование SQLite at rest (SQLCipher/LUKS) vs Postgres on LUKS — что дешевле для соло?",
+    "Pragmatist: минимальный набор (restic + object storage) без ежедневного ops-рутina?",
+    "Developer: WAL-mode + graceful shutdown в deploy-скрипте уже есть?"
+  ],
+  "recommendation": "MVP: SQLite + LUKS или encrypted volume; restic/pg_dump-аналог через sqlite3 .backup в S3 с versioning; раз в квартал restore на чистой VM; runbook на 1 страницу. Postgres — только при втором app-инстансе, managed DB tier, или формальном требовании RBAC/audit; не мигрировать «на всякий случай» на том же VPS.",
+  "research_requests": [
+    {
+      "query": "Solo VPS PII backup checklist: restic vs provider snapshots, SQLite hot backup WAL, restore drill frequency",
+      "priority": "optional",
+      "reason": "Подтвердить минимальный ops-пакет для ПДн без over-engineering Postgres"
+    }
+  ]
+}

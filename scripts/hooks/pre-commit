@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+# Congress pre-commit — validate staged session ANSWER files.
+# Installed by: node congress/scripts/install-hooks.mjs
+
+set -e
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+STAGED="$(git diff --cached --name-only --diff-filter=ACM | grep -E '^congress/sessions/[^/]+/ANSWER\.md$' || true)"
+
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
+echo "Congress pre-commit: validating staged ANSWER.md files..."
+
+for FILE in $STAGED; do
+  SESSION_DIR="$(dirname "$FILE")"
+  echo "  → $SESSION_DIR"
+  node congress/scripts/validate-session.mjs "$SESSION_DIR" --gate full --warn --skip-intake || {
+    echo "Congress validate failed for $SESSION_DIR"
+    echo "Fix session or unstage ANSWER.md"
+    exit 1
+  }
+done
+
+echo "Congress pre-commit: OK"
+exit 0

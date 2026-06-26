@@ -1,0 +1,22 @@
+{"ts":"2026-06-26T18:21:23.710Z","type":"phase","phase":"swarm","wave":"tick-0","status":"started"}
+{"ts":"2026-06-26T18:21:23.711Z","type":"chair","role":"chair","text":"Swarm инициализирован: всем комиссарам разослан стартовый inbox."}
+{"ts":"2026-06-26T18:21:30.306Z","type":"message","role":"critic","round":0,"wave":"swarm-tick-0","text":"ПДн снимают аргумент «мало пользователей». Прошу кибербезопасность зафиксировать минимальный PII-пакет и архитектора — portable миграции.","reply_to":[]}
+{"ts":"2026-06-26T18:21:30.306Z","type":"route","role":"critic","reply_to":["cybersec"],"text":"PII baseline","tick":0}
+{"ts":"2026-06-26T18:21:30.307Z","type":"route","role":"critic","reply_to":["architect"],"text":"dual-target migrations","tick":0}
+{"ts":"2026-06-26T18:21:30.377Z","type":"message","role":"architect","round":0,"wave":"swarm-tick-0","text":"Repository + миграции без SQLite-only. Юристу — managed PG за рубежом; разработчику — ORM checklist.","reply_to":[]}
+{"ts":"2026-06-26T18:21:30.378Z","type":"route","role":"architect","reply_to":["lawyer"],"text":"152-ФЗ managed DB","tick":0}
+{"ts":"2026-06-26T18:21:30.379Z","type":"route","role":"architect","reply_to":["developer"],"text":"ORM week-1","tick":0}
+{"ts":"2026-06-26T18:21:30.450Z","type":"message","role":"pragmatist","round":0,"wave":"swarm-tick-0","text":"Тестеры + ПДн = реальные пользователи, не демо. Но нагрузка мала — Postgres на VPS рано. Техлиду — бэкап runbook.","reply_to":[]}
+{"ts":"2026-06-26T18:21:30.451Z","type":"route","role":"pragmatist","reply_to":["tech-lead"],"text":"backup runbook","tick":0}
+{"ts":"2026-06-26T18:21:30.522Z","type":"message","role":"tech-lead","round":0,"wave":"swarm-tick-0","text":"Nightly encrypted backup to RU storage, monthly restore drill. Безопасности — ops surface SQLite vs PG.","reply_to":[]}
+{"ts":"2026-06-26T18:21:30.523Z","type":"route","role":"tech-lead","reply_to":["security"],"text":"ops risk","tick":0}
+{"ts":"2026-06-26T18:21:30.595Z","type":"phase","phase":"swarm","wave":"tick-1","status":"completed"}
+{"ts":"2026-06-26T18:21:41.035Z","type":"message","role":"developer","round":1,"wave":"swarm-tick-1","text":"Неделя 1: Drizzle/Prisma, WAL, strict types, DATABASE_URL в env. Postgres в docker-compose для smoke-test миграций. Не трогать prod.","reply_to":[]}
+{"ts":"2026-06-26T18:21:41.036Z","type":"route","role":"developer","reply_to":["cybersec"],"text":"PII checklist sign-off","tick":1}
+{"ts":"2026-06-26T18:21:41.107Z","type":"message","role":"lawyer","round":1,"wave":"swarm-tick-1","text":"Managed PG вне РФ без поручения — нет. SQLite на RU VPS с политикой конфиденциальности и основанием обработки — ок для MVP. Уведомление РКН проверить.","reply_to":[]}
+{"ts":"2026-06-26T18:21:41.179Z","type":"message","role":"security","round":1,"wave":"swarm-tick-1","text":"Один VPS = SPOF. SQLite без порта 5432 — меньше misconfig. Обязательно: encrypted volume, off-site backup, quarterly restore. Иначе любая СУБД одинаково плоха.","reply_to":[]}
+{"ts":"2026-06-26T18:21:41.180Z","type":"route","role":"security","reply_to":["critic"],"text":"закрыть консенсус","tick":1}
+{"ts":"2026-06-26T18:21:41.251Z","type":"message","role":"cybersec","round":1,"wave":"swarm-tick-1","text":"PII-baseline: TLS, encryption at rest, least privilege, backup encryption, процедура удаления и инцидента. SQLite ок если baseline за 1–2 дня. Postgres при concurrent write или RLS.","reply_to":[]}
+{"ts":"2026-06-26T18:21:41.323Z","type":"phase","phase":"swarm","wave":"tick-2","status":"completed"}
+{"ts":"2026-06-26T18:21:54.049Z","type":"message","role":"critic","round":2,"wave":"swarm-tick-2","text":"Консенсус: SQLite + PII-baseline, Postgres по триггерам. Закрываем.","reply_to":[]}
+{"ts":"2026-06-26T18:21:54.127Z","type":"phase","phase":"swarm","wave":"tick-3","status":"completed"}

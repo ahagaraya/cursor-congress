@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressDialogueTurn",
+  "type": "object",
+  "required": [
+    "role",
+    "round",
+    "replies",
+    "concessions",
+    "new_ideas",
+    "revised_position",
+    "confidence"
+  ],
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "critic",
+        "architect",
+        "pragmatist",
+        "tech-lead",
+        "developer",
+        "lawyer",
+        "security",
+        "cybersec"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "replies": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["to", "their_point", "stance", "response"],
+        "properties": {
+          "to": {
+            "type": "string",
+            "enum": [
+        "critic",
+        "architect",
+        "pragmatist",
+        "tech-lead",
+        "developer",
+        "lawyer",
+        "security",
+        "cybersec"
+      ]
+          },
+          "their_point": { "type": "string" },
+          "stance": {
+            "type": "string",
+            "enum": ["agree", "disagree", "partial"]
+          },
+          "response": { "type": "string" }
+        }
+      }
+    },
+    "concessions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "new_ideas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "revised_position": {
+      "type": "string",
+      "enum": ["approve", "revise", "reject"]
+    },
+    "revised_recommendation": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

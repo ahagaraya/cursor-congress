@@ -1,0 +1,7 @@
+{
+  "role": "pragmatist",
+  "tick": 0,
+  "content": "Тестеры + ПДн = реальные пользователи, не демо. Но нагрузка мала — Postgres на VPS рано. Техлиду — бэкап runbook.",
+  "route": { "next": [{ "to": "tech-lead", "reason": "backup runbook", "priority": "high" }] },
+  "confidence": 0.87
+}

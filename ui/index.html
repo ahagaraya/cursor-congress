@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Congress — комиссия</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <div id="congress-banner" class="congress-banner hidden" role="status" aria-live="polite">
+    <span class="congress-banner-pulse" aria-hidden="true"></span>
+    <span class="congress-banner-icon" aria-hidden="true">⚖️</span>
+    <span id="congress-banner-text" class="congress-banner-text">Congress работает…</span>
+    <span id="congress-banner-phase" class="congress-banner-phase"></span>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <header class="sidebar-head">
+        <h1>Congress</h1>
+        <p class="muted">Живой диалог комиссии</p>
+      </header>
+      <ul id="session-list" class="session-list"></ul>
+      <footer class="sidebar-foot muted">
+        <span id="status-dot" class="dot"></span>
+        <span id="status-text">подключение…</span>
+      </footer>
+    </aside>
+    <main class="chat-panel">
+      <header class="chat-head">
+        <div>
+          <h2 id="chat-title">Выберите сессию</h2>
+          <p id="chat-phase" class="muted"></p>
+        </div>
+        <button type="button" id="btn-refresh" class="btn">Обновить</button>
+      </header>
+      <div id="messages" class="messages"></div>
+      <div id="brief-panel" class="brief-panel hidden">
+        <details>
+          <summary>BRIEF</summary>
+          <pre id="brief-text"></pre>
+        </details>
+      </div>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

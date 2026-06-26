@@ -1,0 +1,25 @@
+{
+  "phase": "complete",
+  "wave": "tick-3",
+  "status": "completed",
+  "mode": "swarm",
+  "completed_phases": [
+    "setup",
+    "triage",
+    "intake",
+    "brief",
+    "r1",
+    "optional_r1",
+    "research",
+    "merge",
+    "swarm_init",
+    "swarm",
+    "proposal",
+    "editor",
+    "assistant",
+    "validate"
+  ],
+  "updated": "2026-06-26T18:26:16.755Z",
+  "commission_mode": "full",
+  "congress_version": "1.2.0"
+}

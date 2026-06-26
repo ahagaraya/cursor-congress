@@ -1,0 +1,11 @@
+blocking: true
+asked_at: "2026-06-26T12:00:00Z"
+answered_at: "2026-06-26T12:05:00Z"
+answers:
+  commission_mode: full
+  app_type: "Сайд-проект / инструмент для себя"
+  scale: "Только я и тестеры"
+  hosting: "Один VPS / VM"
+  concurrency: "Не сейчас, возможно скоро"
+  data_sensitivity: "Персональные данные пользователей"
+  sqlite_pain: "Мелкие неудобства (миграции, типы)"

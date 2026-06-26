@@ -1,0 +1,20 @@
+{
+  "evolved_solution": "Остаться на SQLite для MVP соло-разработчика (сайд-проект, автор+тестеры, один RU VPS) при обязательном PII-baseline: шифрование диска, TLS, off-site бэкапы в РФ, ежемесячный restore drill, политика конфиденциальности, процедура удаления. Мелкие боли миграций — ORM + dual-target миграции. PostgreSQL — при триггерах: concurrent writers, второй инстанс, RLS, непереносимые миграции под живыми ПДн. Managed PG только с локализацией в РФ.",
+  "verdict": "approve_sqlite_with_pii_baseline",
+  "conditions": [
+    "PII-baseline до приёма реальных пользователей",
+    "Portable миграции (без SQLite-only без fallback)",
+    "Документированные триггеры перехода на Postgres",
+    "Бэкапы ПДн только в РФ, зашифрованы"
+  ],
+  "dissent": [
+    { "role": "critic", "position": "revise — если PII-baseline на SQLite >2 дней, рассмотреть Postgres с первого релиза" }
+  ],
+  "migration_triggers": [
+    "Sustained concurrent writers / database locked",
+    "Второй инстанс приложения",
+    "Нужны RLS или роли на уровне БД",
+    "Миграции схемы под живыми ПДн становятся болезненными",
+    "Managed tier с RU-локализацией дешевле ops чем self-host"
+  ]
+}

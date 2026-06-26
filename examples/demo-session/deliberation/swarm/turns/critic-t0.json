@@ -1,0 +1,10 @@
+{
+  "role": "critic",
+  "tick": 0,
+  "content": "ПДн снимают аргумент «мало пользователей». Прошу кибербезопасность зафиксировать минимальный PII-пакет и архитектора — portable миграции.",
+  "route": { "next": [
+    { "to": "cybersec", "reason": "PII baseline", "priority": "high" },
+    { "to": "architect", "reason": "dual-target migrations", "priority": "high" }
+  ]},
+  "confidence": 0.85
+}

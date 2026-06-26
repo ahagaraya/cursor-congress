@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CongressCommissionerOpinion",
+  "type": "object",
+  "required": [
+    "role",
+    "position",
+    "confidence",
+    "key_points",
+    "risks",
+    "evidence",
+    "questions_for_others"
+  ],
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "critic",
+        "architect",
+        "pragmatist",
+        "tech-lead",
+        "developer",
+        "lawyer",
+        "security",
+        "cybersec",
+        "economist",
+        "marketer",
+        "product-manager"
+      ]
+    },
+    "position": {
+      "type": "string",
+      "enum": ["approve", "revise", "reject"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "summary": {
+      "type": "string",
+      "description": "One paragraph executive summary from this commissioner's perspective"
+    },
+    "key_points": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Facts, file paths, or citations supporting the opinion"
+    },
+    "questions_for_others": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "recommendation": {
+      "type": "string",
+      "description": "Concrete recommended action"
+    },
+    "research_requests": {
+      "type": "array",
+      "description": "Optional: invoke Researcher (orchestrator runs after Round 1)",
+      "items": {
+        "type": "object",
+        "required": ["query", "priority", "reason"],
+        "properties": {
+          "query": { "type": "string" },
+          "priority": { "enum": ["blocking", "optional"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "invoke_optional_roles": {
+      "type": "array",
+      "description": "Suggest optional commissioners for chair to invoke (economist, marketer, product-manager)",
+      "items": {
+        "type": "string",
+        "enum": ["economist", "marketer", "product-manager"]
+      }
+    }
+  },
+  "additionalProperties": false
+}

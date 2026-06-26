@@ -1,0 +1,225 @@
+{
+  "$schema": "./phases-schema.json",
+  "version": 1,
+  "phases": {
+    "setup": {
+      "order": 0,
+      "label": "Создание сессии",
+      "validate_gate": null,
+      "reads": [],
+      "writes": [
+        "BRIEF.md",
+        "assumptions.yaml",
+        "intake/questions.yaml",
+        "deliberation/state.json",
+        "deliberation/swarm/router-state.json",
+        "deliberation/swarm/turns/",
+        "opinions/",
+        "research/requests/",
+        "research/findings/"
+      ],
+      "skill_refs": [
+        ".cursor/skills/congress/references/workspace-contract.md"
+      ],
+      "chair": "node congress/scripts/new-session.mjs <slug> --question \"...\"  OR scaffold from congress/templates/session/"
+    },
+    "triage": {
+      "order": 1,
+      "label": "Triage — режим full/lite",
+      "validate_gate": null,
+      "reads": ["BRIEF.md", "assumptions.yaml"],
+      "writes": ["assumptions.yaml", "deliberation/state.json"],
+      "skill_refs": [".cursor/skills/congress/references/triage-protocol.md"],
+      "chair": "AskUserQuestion: full vs lite. Затем: node congress/scripts/triage.mjs <session> --set full|lite. Обязательно до intake."
+    },
+    "intake": {
+      "order": 2,
+      "label": "Intake (опрос до анализа)",
+      "validate_gate": "intake",
+      "reads": [
+        "BRIEF.md",
+        "intake/questions.yaml",
+        ".cursor/skills/congress/references/intake-protocol.md"
+      ],
+      "writes": ["intake/answers.yaml", "assumptions.yaml"],
+      "skill_refs": [".cursor/skills/congress/references/intake-protocol.md"],
+      "chair": "Задать вопросы из intake/questions.yaml; записать intake/answers.yaml. Либо --skip-intake + skip_intake_reason в assumptions.yaml"
+    },
+    "brief": {
+      "order": 3,
+      "label": "Brief",
+      "validate_gate": null,
+      "reads": ["intake/answers.yaml", "assumptions.yaml"],
+      "writes": ["BRIEF.md", "assumptions.yaml"],
+      "skill_refs": [".cursor/skills/congress/SKILL.md#phase-2--brief"],
+      "chair": "Обновить BRIEF.md: Question, Context, Success criteria, Out of scope из intake"
+    },
+    "r1": {
+      "order": 3,
+      "label": "Round 1 — 8 мнений",
+      "validate_gate": "r1",
+      "parallel_tasks": 8,
+      "reads_per_role": [
+        "BRIEF.md",
+        "assumptions.yaml",
+        ".cursor/skills/congress/references/commissioners/{role}.md",
+        ".cursor/skills/congress/references/output-schema.json"
+      ],
+      "writes_per_role": ["opinions/{role}.json"],
+      "skill_refs": [
+        ".cursor/skills/congress/references/swarm-task-prompt.md#round-1",
+        ".cursor/skills/congress/references/output-schema.json"
+      ],
+      "chair": "8 параллельных Task (critic, architect, pragmatist, tech-lead, developer, lawyer, security, cybersec). Каждый пишет только opinions/{role}.json — не читать чужие мнения."
+    },
+    "optional_r1": {
+      "order": 3.5,
+      "label": "Round 1 — опциональные комиссары",
+      "validate_gate": "r1",
+      "parallel_tasks": "0-3",
+      "reads_per_role": [
+        "BRIEF.md",
+        "assumptions.yaml",
+        ".cursor/skills/congress/references/commissioners/{role}.md",
+        ".cursor/skills/congress/references/output-schema.json"
+      ],
+      "writes_per_role": ["opinions/{role}.json"],
+      "skill_refs": [
+        ".cursor/skills/congress/references/swarm-task-prompt.md#optional-round-1"
+      ],
+      "chair": "node congress/scripts/run.mjs <session> optional-roles — затем Task только для economist / marketer / product-manager при необходимости"
+    },
+    "research": {
+      "order": 4,
+      "label": "Исследование (blocking)",
+      "validate_gate": "research",
+      "reads": [
+        "opinions/*.json",
+        "research/requests/*.json",
+        ".cursor/skills/congress/references/commissioners/researcher.md"
+      ],
+      "writes": [
+        "research/requests/{id}.json",
+        "research/findings/{id}.json"
+      ],
+      "skill_refs": [
+        ".cursor/skills/congress/references/commissioners/researcher.md",
+        ".cursor/skills/congress/references/research-request-schema.json"
+      ],
+      "chair": "Собрать research_requests из opinions; для blocking: Researcher Task → findings → node congress/swarm/router.mjs research-done <session> <id>"
+    },
+    "merge": {
+      "order": 5,
+      "label": "Слияние Round 1",
+      "validate_gate": null,
+      "reads": ["opinions/*.json", "research/findings/*.json"],
+      "writes": [
+        "deliberation/conflicts.json",
+        "deliberation/consensus.json",
+        "deliberation/dialogue.md"
+      ],
+      "skill_refs": [".cursor/skills/congress/SKILL.md#phase-4--merge"],
+      "chair": "Chair синтезирует conflicts.json и consensus.json из 8 мнений"
+    },
+    "swarm_init": {
+      "order": 6,
+      "label": "Инициализация swarm",
+      "validate_gate": null,
+      "reads": ["deliberation/conflicts.json"],
+      "writes": [
+        "deliberation/swarm/router-state.json",
+        "deliberation/swarm/messages.jsonl",
+        "deliberation/swarm/graph.json"
+      ],
+      "automated_command": "node congress/swarm/router.mjs init <session>",
+      "chair": "node congress/swarm/router.mjs init congress/sessions/<slug>"
+    },
+    "swarm": {
+      "order": 7,
+      "label": "Роевой диалог",
+      "validate_gate": "swarm",
+      "reads_per_role": [
+        "BRIEF.md",
+        "deliberation/conflicts.json",
+        "opinions/*.json",
+        "research/findings/*.json",
+        "deliberation/swarm/router-state.json",
+        "deliberation/swarm/messages.jsonl"
+      ],
+      "writes_per_role": ["deliberation/swarm/turns/{role}-t{tick}.json"],
+      "skill_refs": [
+        ".cursor/skills/congress/references/swarm-task-prompt.md#swarm-tick",
+        ".cursor/skills/congress/references/swarm-message-schema.json",
+        ".cursor/skills/congress/references/commissioner-swarm-addendum.md"
+      ],
+      "chair_loop": [
+        "node congress/scripts/run.mjs <session> --swarm-step",
+        "Task каждой active-роли → turns/{role}-t{tick}.json",
+        "node congress/scripts/run.mjs <session> --swarm-process",
+        "повторять до should-stop"
+      ]
+    },
+    "proposal": {
+      "order": 8,
+      "label": "Proposal (Chair)",
+      "validate_gate": "proposal",
+      "reads": [
+        "deliberation/swarm/messages.jsonl",
+        "deliberation/conflicts.json",
+        "research/findings/*.json",
+        "opinions/*.json"
+      ],
+      "writes": ["deliberation/proposal.json"],
+      "skill_refs": [".cursor/skills/congress/references/proposal-schema.json"],
+      "chair": "Chair пишет deliberation/proposal.json по итогам swarm"
+    },
+    "editor": {
+      "order": 9,
+      "label": "Редактор — ANSWER.md (статья)",
+      "validate_gate": "answer",
+      "reads": [
+        "BRIEF.md",
+        "deliberation/proposal.json",
+        "opinions/*.json",
+        "deliberation/swarm/messages.jsonl",
+        "research/findings/*.json",
+        "deliberation/conflicts.json",
+        ".cursor/skills/congress/references/commissioners/editor.md",
+        ".cursor/skills/congress/references/answer-style.md",
+        ".cursor/skills/congress/references/synthesis-template.md"
+      ],
+      "writes": ["ANSWER.md", "synthesis/draft.md"],
+      "skill_refs": [
+        ".cursor/skills/congress/references/commissioners/editor.md",
+        ".cursor/skills/congress/references/answer-style.md"
+      ],
+      "chair": "Task редактора: связная статья на русском + сводные таблицы и списки где уместно (см. editor.md). Может запросить research/requests/*.json → Researcher → research-done. Затем: node congress/scripts/lint-prose.mjs ANSWER.md"
+    },
+    "answer": {
+      "order": 9,
+      "label": "(legacy alias editor)",
+      "validate_gate": "answer",
+      "deprecated": true,
+      "chair": "Используйте фазу editor"
+    },
+    "assistant": {
+      "order": 10,
+      "label": "ANSWER_PLAIN + glossary",
+      "validate_gate": "full",
+      "reads": [
+        "ANSWER.md",
+        ".cursor/skills/congress/references/commissioners/assistant.md"
+      ],
+      "writes": ["ANSWER_PLAIN.md", "glossary/glossary.md"],
+      "skill_refs": [".cursor/skills/congress/references/commissioners/assistant.md"],
+      "chair": "Assistant Task: переформулировать ANSWER без потери глубины"
+    },
+    "validate": {
+      "order": 11,
+      "label": "Финальная проверка",
+      "validate_gate": "full",
+      "automated_command": "node congress/scripts/run.mjs <session> validate",
+      "chair": "lint jargon + swarm ≥3 ходов + 8 мнений. Флаги: --skip-intake, --no-lint, --lint-all, --warn. exit 0 обязателен"
+    }
+  }
+}

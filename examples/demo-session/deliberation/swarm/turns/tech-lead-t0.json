@@ -1,0 +1,7 @@
+{
+  "role": "tech-lead",
+  "tick": 0,
+  "content": "Nightly encrypted backup to RU storage, monthly restore drill. Безопасности — ops surface SQLite vs PG.",
+  "route": { "next": [{ "to": "security", "reason": "ops risk", "priority": "normal" }] },
+  "confidence": 0.86
+}

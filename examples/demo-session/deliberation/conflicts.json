@@ -1,0 +1,24 @@
+{
+  "conflicts": [
+    {
+      "id": "c1",
+      "topic": "ПДн: достаточно ли SQLite с бэкапами или нужен Postgres с первого релиза",
+      "summary": "Критик, безопасность и кибербезопасность ужесточают требования; архитектор и разработчик считают движок вторичен",
+      "positions": {
+        "critic": "revise — PII-пакет обязателен; если не укладывается в 1–2 дня на SQLite — Postgres",
+        "architect": "approve SQLite + шифрование VPS и off-site бэкапы",
+        "cybersec": "revise — baseline важнее движка; SQLite при закрытом baseline"
+      },
+      "resolution": "Согласие: сначала PII-baseline (шифрование, off-site бэкап, restore drill, удаление пользователя). SQLite допустим при выполнении baseline; Postgres — при триггерах нагрузки или если baseline на SQLite неудобен"
+    },
+    {
+      "id": "c2",
+      "topic": "Managed PostgreSQL за рубежом",
+      "positions": {
+        "lawyer": "Риск 152-ФЗ без локализации и поручения обработки",
+        "pragmatist": "Managed PG удобен, но только RU-регион"
+      },
+      "resolution": "Для MVP с ПДн: self-host на RU VPS или SQLite; managed — только с RU-хранением и договором"
+    }
+  ]
+}

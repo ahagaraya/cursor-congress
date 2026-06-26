@@ -1,0 +1,10 @@
+{
+  "role": "architect",
+  "tick": 0,
+  "content": "Repository + миграции без SQLite-only. Юристу — managed PG за рубежом; разработчику — ORM checklist.",
+  "route": { "next": [
+    { "to": "lawyer", "reason": "152-ФЗ managed DB", "priority": "normal" },
+    { "to": "developer", "reason": "ORM week-1", "priority": "normal" }
+  ]},
+  "confidence": 0.88
+}
